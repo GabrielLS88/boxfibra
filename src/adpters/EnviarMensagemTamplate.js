@@ -3,15 +3,14 @@ import * as dotenv from 'dotenv';
 import crypto from 'crypto';
 dotenv.config();
 
-export default async function EnviarMensagemTamplate(dados, nomeTamplate) {
+export default async function EnviarMensagemTamplate(dados, nomeTamplate, idBlock) {
     try {
-        const token = process.env.TOKENROTEADOR;
-        const flowId = '877f8902-7c82-4ca0-8e99-9e401a404751'; // id do fluxo
+        const flowId = 'd5b2a311-88b3-4e97-88fa-7f604bd12ae3'; // id do fluxo
         const stateId = idBlock; // id do bloco
-        const masterState = `${process.env.IDROTEADOR}@msging.net`; // id do roteador
+        const masterState = 'roteadortelek1@msging.net'; // id do roteador
 
         const headers = {
-            Authorization: token,
+            Authorization: process.env.TOKENROTEADOR,
             'Content-Type': 'application/json'
         };
 
