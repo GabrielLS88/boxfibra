@@ -1,10 +1,11 @@
 import AutenticacaoApi from "../adpters/AutenticacaoApi.js";
 import ColetarBoletos from "../adpters/ColetarBoletos.js";
 import EnviarMensagemTamplateBoleto from "../adpters/EnviarMensagemTamplateBoleto.js";
+import ColetantoTipoContrato from "../adpters/ColetantoTipoContrato.js"
 
 export default async function ValidarBoletosParaDiparos() {
     try {
-        
+
         const autenticacao = await AutenticacaoApi();
 
         if (autenticacao.status === false) {
@@ -43,7 +44,7 @@ export default async function ValidarBoletosParaDiparos() {
                 "invoice_payment_method": null,
                 "invoice_payment_cmc7": null,
                 "invoice_nosso_num": "00003387900000053221",
-                "invoice_date_due": "2025-08-25",
+                "invoice_date_due": "2025-08-13",
                 "invoice_date_document": "2024-08-12 09:49:01.139729",
                 "invoice_date_credit": null,
                 "invoice_msg": null,
@@ -163,18 +164,28 @@ export default async function ValidarBoletosParaDiparos() {
 
         for (let i = 0; i < boletoDefinido.length; i++) {
             if (boletoDefinido[i].invoice_amount_paid == null) {
-                const dadosInfo = {
-                    "valor": boletoDefinido[i].invoice_amount_document,
-                    "linkPagamento": boletoDefinido[i].invoice_gn_link,
-                    "dataVencimento": formatarData(boletoDefinido[i].invoice_date_due),
-                    "phone": "3432937122",
-                    "referente": boletoDefinido[i].profile_name
-                }
+                if (isDateInFiveDays(boletoDefinido[i].invoice_date_due) == true) {
+                    console.log(`Disparando para cliente ${boletoDefinido[i].client_complete_name}`)
+                    const coletantoTipoContrato = await ColetantoTipoContrato(boletoDefinido[i].contract_pk)
 
-                console.log(`🔵 Valor: ${dadosInfo.valor}, 🟢 Link Pagamento: ${dadosInfo.linkPagamento}, ⚪ Data Vencimento: ${dadosInfo.dataVencimento}, 🟡 Referente: ${dadosInfo.referente}`);
-                await EnviarMensagemTamplateBoleto(dadosInfo, "teste_box_fibra_cobranca_correto", "123cca07-765d-4832-8c54-73086cee7894");
+                    const dadosInfo = {
+                        "valor": boletoDefinido[i].invoice_amount_document,
+                        "linkPagamento": boletoDefinido[i].invoice_gn_link,
+                        "dataVencimento": formatarData(boletoDefinido[i].invoice_date_due),
+                        "phone": "31982432000",
+                        "referente": coletantoTipoContrato.data != false ? coletantoTipoContrato.data.plan_name : boletoDefinido[i].profile_name,
+                        "linkPix": boletoDefinido[i].invoice_qrcode,
+                        "codigoDeBarra": boletoDefinido[i].invoice_barcode
+                    }
+
+                    console.log(`🔵 Valor: ${dadosInfo.valor}, 🟢 Link Pagamento: ${dadosInfo.linkPagamento}, ⚪ Data Vencimento: ${dadosInfo.dataVencimento}, 🟡 Referente: ${dadosInfo.referente}`);
+                    await EnviarMensagemTamplateBoleto(dadosInfo, "teste_box_fibra_cobranca_atualizada", "123cca07-765d-4832-8c54-73086cee7894");
+                    continue;
+                }
+                console.log(`Cliente tem boleto em aberto porem não esta na data para disparar ${boletoDefinido[i].client_complete_name}`)
                 continue;
             }
+            console.log(`Cliente esta em dia com as contas ${boletoDefinido[i].client_complete_name}`)
         }
 
         return {
@@ -194,20 +205,27 @@ export default async function ValidarBoletosParaDiparos() {
 
 
 function formatarData(isoDate) {
-  const data = new Date(isoDate);
-  const dia = String(data.getDate()).padStart(2, "0");
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const ano = data.getFullYear();
-  return `${dia}/${mes}/${ano}`;
+    const data = new Date(isoDate);
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const ano = data.getFullYear();
+    return `${dia}/${mes}/${ano}`;
 }
 
 
-// PORTA=4011
-// TOKEN="Sq6HwAhjAnyGgBS6fgtDRIFvFxYxZ57nPxrh83t5XIRrKysmP6CcEFPxRUtTDgBm"
-// USUARIO="blip"
-// SENHA="blip"
-// URL="http://controllr.boxtele.com.br:8081"
-// TOKENROTEADOR=""
-// IDROTEADOR=""
-// CONTRACTIDBUSSINES="Telek"
+function isDateInFiveDays(dateStr) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const targetDate = new Date(year, month - 1, day); 
+    targetDate.setHours(0, 0, 0, 0);
+
+    const diffInMs = targetDate - today;
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+    return diffInDays === 5;
+}
+
+//31982432000
+//33999222229

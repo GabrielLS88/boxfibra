@@ -200,13 +200,16 @@ export default async function ValidandoOrdensBrByte() {
             // }
 
             const dadosInfo = {
-                "nome": "Gabriel telek",
+                "nome": "Teste telek",
                 "endereco": listaOrdes[i].address + " - " + listaOrdes[i].address_number + " - " + listaOrdes[i].address_neighborhood + " - " + listaOrdes[i].address_province + " " + listaOrdes[i].address_state,
                 "dataPrevista": timeFormatado.dataFormatada,
                 "horaPrevista": timeFormatado.horaFormatada,
-                "phone": "3432937122",
+                "phone": "33999222229",
                 "task": listaOrdes[i].task_name
             }
+
+            //31982432000
+            //33999222229
 
             if (verificarSeEstaDentroDasCondicoes === 72) {
                 console.log(`🔵 Nome: ${dadosInfo.nome}, 🟢 Endereço: ${dadosInfo.endereco}, ⚪ Phone: ${dadosInfo.phone}, 🟡 Data da visita: ${dadosInfo.dataPrevista}, 🟠 Hora da visita: ${dadosInfo.horaPrevista}`);

@@ -34,12 +34,14 @@ export default async function EnviarMensagemTamplateBoleto(dados, nomeTamplate, 
                         "1": dados.valor, // valor
                         "2": dados.dataVencimento, // data
                         "3": dados.referente, // referente
-                        "4": dados.linkPagamento, // link
+                        "4": dados.linkPix, // link
+                        "5": dados.codigoDeBarra,
+                        "6": dados.linkPagamento
                     },
                 },
                 message: {
                     messageTemplate: nomeTamplate, // nome do tamplate
-                    messageParams: [1, 2, 3, 4],
+                    messageParams: [1, 2, 3, 4, 5, 6],
                     channelType: 'WhatsApp',
                 },
             },
@@ -51,7 +53,6 @@ export default async function EnviarMensagemTamplateBoleto(dados, nomeTamplate, 
             { headers }
         );
 
-        console.log(response.data)
         return {
             status: true,
             mensagem: "Enviado para a blip com sucesso",
