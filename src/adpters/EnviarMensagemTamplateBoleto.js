@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import crypto from 'crypto';
 dotenv.config();
 
-export default async function EnviarMensagemTamplate(dados, nomeTamplate, idBlock) {
+export default async function EnviarMensagemTamplateBoleto(dados, nomeTamplate, idBlock) {
     try {
         const flowId = '9391e874-166f-47a3-b987-4dc603a0b02b'; // id do fluxo
         const stateId = idBlock; // id do bloco
@@ -31,11 +31,10 @@ export default async function EnviarMensagemTamplate(dados, nomeTamplate, idBloc
                 audience: {
                     recipient: `+55${dados.phone}`,
                     messageParams: {
-                        "1": dados.nome,
-                        "2": dados.dataPrevista,
-                        "3": dados.horaPrevista,
-                        "4": dados.endereco,
-                        "task": dados.task
+                        "1": dados.valor, // valor
+                        "2": dados.dataVencimento, // data
+                        "3": dados.referente, // referente
+                        "4": dados.linkPagamento, // link
                     },
                 },
                 message: {
@@ -52,6 +51,7 @@ export default async function EnviarMensagemTamplate(dados, nomeTamplate, idBloc
             { headers }
         );
 
+        console.log(response.data)
         return {
             status: true,
             mensagem: "Enviado para a blip com sucesso",
