@@ -140,3 +140,5 @@ async function iniciarRotatividade() {
 }
 
 iniciarRotatividade();
+
+//ValidarBoletosParaDiparos();

@@ -46,7 +46,7 @@ export default async function ValidandoOrdensBrByte() {
                 "op_number": "20250528000006",
                 "op_priority": 3,
                 "op_sla": 2880,
-                "op_date_sched": "2025-08-08 08:00:00",
+                "op_date_sched": "2025-08-09 08:00:00",
                 "op_date_answer": null,
                 "op_date_start": null,
                 "op_date_finish": null,
@@ -204,13 +204,13 @@ export default async function ValidandoOrdensBrByte() {
                 "endereco": listaOrdes[i].address + " - " + listaOrdes[i].address_number + " - " + listaOrdes[i].address_neighborhood + " - " + listaOrdes[i].address_province + " " + listaOrdes[i].address_state,
                 "dataPrevista": timeFormatado.dataFormatada,
                 "horaPrevista": timeFormatado.horaFormatada,
-                "phone": "34997801829",
+                "phone": "3432937122",
                 "task": listaOrdes[i].task_name
             }
 
             if (verificarSeEstaDentroDasCondicoes === 72) {
                 console.log(`🔵 Nome: ${dadosInfo.nome}, 🟢 Endereço: ${dadosInfo.endereco}, ⚪ Phone: ${dadosInfo.phone}, 🟡 Data da visita: ${dadosInfo.dataPrevista}, 🟠 Hora da visita: ${dadosInfo.horaPrevista}`);
-                await EnviarMensagemTamplate(dadosInfo, "teste_box_fibra_endereco_72", "5afa90fb-5b4f-4813-9333-c6cb7b40e9b3");
+                await EnviarMensagemTamplate(dadosInfo, "teste_box_fibra_endereco_72_ajustada", "5afa90fb-5b4f-4813-9333-c6cb7b40e9b3");
                 continue;
             }
 

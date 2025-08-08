@@ -166,8 +166,8 @@ export default async function ValidarBoletosParaDiparos() {
                 const dadosInfo = {
                     "valor": boletoDefinido[i].invoice_amount_document,
                     "linkPagamento": boletoDefinido[i].invoice_gn_link,
-                    "dataVencimento": boletoDefinido[i].invoice_date_due,
-                    "phone": "34997801829",
+                    "dataVencimento": formatarData(boletoDefinido[i].invoice_date_due),
+                    "phone": "3432937122",
                     "referente": boletoDefinido[i].profile_name
                 }
 
@@ -190,6 +190,15 @@ export default async function ValidarBoletosParaDiparos() {
             data: e
         }
     }
+}
+
+
+function formatarData(isoDate) {
+  const data = new Date(isoDate);
+  const dia = String(data.getDate()).padStart(2, "0");
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const ano = data.getFullYear();
+  return `${dia}/${mes}/${ano}`;
 }
 
 
